@@ -3,27 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIT Course Registration System</title>
+    <title>RIT Course Registration | Rochester Institute of Technology</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Neue Haas Grotesk alternative - using Inter which is similar -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎓 RIT Course Registration System</h1>
-            <p class="subtitle">Browse and explore available courses</p>
-        </header>
+    <!-- RIT Branded Header -->
+    <div class="rit-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="https://www.rit.edu/brandportal/sites/rit.edu.brandportal/files/2020-10/RIT_logo1.jpg" alt="RIT Logo" class="rit-logo">
+            </div>
+            <div class="header-text">
+                <h1 class="main-title">Course Registration</h1>
+                <p class="tagline">Saunders College of Business</p>
+            </div>
+        </div>
+    </div>
 
-        <div class="controls">
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Explore Your Academic Journey</h2>
+                <p>Browse courses, plan your schedule, and build your future at RIT</p>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <div class="search-section">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search by course code, title, or department...">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search courses by code, title, or keyword...">
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-header">
+                <h3>Filter by Department</h3>
+                <button id="clearFilters" class="clear-btn">Clear All</button>
             </div>
             
-            <div class="filters">
-                <select id="departmentFilter">
+            <!-- Department Filter Buttons -->
+            <div id="departmentButtons" class="department-buttons">
+                <!-- Buttons will be dynamically generated -->
+            </div>
+
+            <!-- Traditional Dropdown (backup) -->
+            <div class="traditional-filters">
+                <select id="departmentFilter" class="filter-select">
                     <option value="">All Departments</option>
                 </select>
                 
-                <select id="levelFilter">
+                <select id="levelFilter" class="filter-select">
                     <option value="">All Levels</option>
                     <option value="100">100-level</option>
                     <option value="200">200-level</option>
@@ -34,14 +72,35 @@
             </div>
         </div>
 
-        <div class="stats">
-            <span id="courseCount">Loading courses...</span>
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number" id="courseCount">49</span>
+                <span class="stat-label">Courses Available</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="departmentCount">10</span>
+                <span class="stat-label">Departments</span>
+            </div>
         </div>
 
+        <!-- Course List -->
         <div id="courseList" class="course-list">
             <!-- Courses will be dynamically loaded here -->
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="rit-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Rochester Institute of Technology. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.rit.edu">RIT Home</a>
+                <a href="https://www.rit.edu/academics">Academics</a>
+                <a href="https://www.rit.edu/admissions">Admissions</a>
+            </div>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>

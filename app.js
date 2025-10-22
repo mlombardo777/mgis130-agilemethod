@@ -1,6 +1,7 @@
 // Global variables
 let allCourses = [];
 let filteredCourses = [];
+let selectedDepartment = '';
 
 // DOM elements
 const courseList = document.getElementById('courseList');
@@ -8,13 +9,18 @@ const searchInput = document.getElementById('searchInput');
 const departmentFilter = document.getElementById('departmentFilter');
 const levelFilter = document.getElementById('levelFilter');
 const courseCount = document.getElementById('courseCount');
+const departmentCount = document.getElementById('departmentCount');
+const departmentButtons = document.getElementById('departmentButtons');
+const clearFiltersBtn = document.getElementById('clearFilters');
 
 // Load courses on page load
 document.addEventListener('DOMContentLoaded', async () => {
     await loadCourses();
     populateFilters();
+    createDepartmentButtons();
     displayCourses();
     setupEventListeners();
+    updateStats();
 });
 
 // Load courses from JSON file
@@ -43,16 +49,59 @@ function populateFilters() {
     });
 }
 
+// Create department filter buttons
+function createDepartmentButtons() {
+    const departments = [...new Set(allCourses.map(course => course.department))].sort();
+    
+    // Create "All" button
+    const allBtn = document.createElement('button');
+    allBtn.className = 'dept-btn active';
+    allBtn.textContent = 'All Departments';
+    allBtn.dataset.department = '';
+    departmentButtons.appendChild(allBtn);
+    
+    // Create button for each department
+    departments.forEach(dept => {
+        const btn = document.createElement('button');
+        btn.className = 'dept-btn';
+        btn.textContent = dept;
+        btn.dataset.department = dept;
+        departmentButtons.appendChild(btn);
+    });
+}
+
+// Update statistics
+function updateStats() {
+    const departments = new Set(filteredCourses.map(course => course.department));
+    courseCount.textContent = filteredCourses.length;
+    departmentCount.textContent = departments.size;
+}
+
 // Display courses
 function displayCourses() {
     if (filteredCourses.length === 0) {
         courseList.innerHTML = '<div class="no-courses">No courses found matching your criteria.</div>';
-        courseCount.textContent = 'No courses found';
+        updateStats();
         return;
     }
 
     courseList.innerHTML = filteredCourses.map(course => createCourseCard(course)).join('');
-    courseCount.textContent = `Showing ${filteredCourses.length} of ${allCourses.length} courses`;
+    updateStats();
+    
+    // Add fade-in animation
+    setTimeout(() => {
+        document.querySelectorAll('.course-card').forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 30);
+            }, 0);
+        });
+    }, 0);
 }
 
 // Create HTML for a course card
@@ -97,7 +146,6 @@ function createCourseCard(course) {
 // Filter courses based on search and filters
 function filterCourses() {
     const searchTerm = searchInput.value.toLowerCase();
-    const selectedDepartment = departmentFilter.value;
     const selectedLevel = levelFilter.value;
 
     filteredCourses = allCourses.filter(course => {
@@ -108,7 +156,7 @@ function filterCourses() {
             course.department.toLowerCase().includes(searchTerm) ||
             course.description.toLowerCase().includes(searchTerm);
 
-        // Department filter
+        // Department filter (from buttons or dropdown)
         const matchesDepartment = !selectedDepartment || 
             course.department === selectedDepartment;
 
@@ -122,11 +170,78 @@ function filterCourses() {
     displayCourses();
 }
 
+// Handle department button clicks
+function handleDepartmentButtonClick(event) {
+    if (event.target.classList.contains('dept-btn')) {
+        // Remove active class from all buttons
+        document.querySelectorAll('.dept-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        event.target.classList.add('active');
+        
+        // Update selected department
+        selectedDepartment = event.target.dataset.department;
+        
+        // Sync dropdown
+        departmentFilter.value = selectedDepartment;
+        
+        // Filter courses
+        filterCourses();
+    }
+}
+
+// Handle dropdown change
+function handleDropdownChange() {
+    selectedDepartment = departmentFilter.value;
+    
+    // Update button active state
+    document.querySelectorAll('.dept-btn').forEach(btn => {
+        if (btn.dataset.department === selectedDepartment) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    filterCourses();
+}
+
+// Clear all filters
+function clearAllFilters() {
+    // Reset selected department
+    selectedDepartment = '';
+    
+    // Reset search
+    searchInput.value = '';
+    
+    // Reset level filter
+    levelFilter.value = '';
+    
+    // Reset dropdown
+    departmentFilter.value = '';
+    
+    // Reset button states
+    document.querySelectorAll('.dept-btn').forEach(btn => {
+        if (btn.dataset.department === '') {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    // Reset and display all courses
+    filterCourses();
+}
+
 // Setup event listeners
 function setupEventListeners() {
     searchInput.addEventListener('input', filterCourses);
-    departmentFilter.addEventListener('change', filterCourses);
+    departmentButtons.addEventListener('click', handleDepartmentButtonClick);
+    departmentFilter.addEventListener('change', handleDropdownChange);
     levelFilter.addEventListener('change', filterCourses);
+    clearFiltersBtn.addEventListener('click', clearAllFilters);
 }
 
 // Utility function to get course by code (for future features)
@@ -134,18 +249,16 @@ function getCourseByCode(courseCode) {
     return allCourses.find(course => course.courseCode === courseCode);
 }
 
+// Get courses by department
+function getCoursesByDepartment(department) {
+    return allCourses.filter(course => course.department === department);
+}
+
 // Export functions for potential testing or extension
 window.CourseApp = {
     getCourseByCode,
+    getCoursesByDepartment,
     filterCourses,
-    displayCourses
+    displayCourses,
+    clearAllFilters
 };
-```
-
-## **File Structure:**
-```
-rit-course-registration/
-├── index.html          ← Main HTML file
-├── styles.css          ← All the styling
-├── app.js              ← JavaScript functionality
-└── rit_courses.json    ← Your course data
