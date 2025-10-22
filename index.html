@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIT Course Registration System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 RIT Course Registration System</h1>
+            <p class="subtitle">Browse and explore available courses</p>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by course code, title, or department...">
+            </div>
+            
+            <div class="filters">
+                <select id="departmentFilter">
+                    <option value="">All Departments</option>
+                </select>
+                
+                <select id="levelFilter">
+                    <option value="">All Levels</option>
+                    <option value="100">100-level</option>
+                    <option value="200">200-level</option>
+                    <option value="300">300-level</option>
+                    <option value="400">400-level</option>
+                    <option value="500">500-level</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats">
+            <span id="courseCount">Loading courses...</span>
+        </div>
+
+        <div id="courseList" class="course-list">
+            <!-- Courses will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
